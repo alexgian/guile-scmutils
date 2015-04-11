@@ -26,8 +26,7 @@ be installed separately.
 
 ## Functionality not available in the port
 
-<ul>
-<li>Scheme extension to allow applying vectors/structures as procedures.
+Scheme extension to allow applying vectors/structures as procedures.
 For example rather than
 <pre>1 ]=> (pe ((up (literal-function 'x) (literal-function 'y)) 't))
 (up (x t) (y t))
@@ -37,7 +36,6 @@ you must use
 (up (x t) (y t))
 </pre>
 See below for an example with mechanics state functions.
-</ul>
 
 ## Example session
 

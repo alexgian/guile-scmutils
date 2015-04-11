@@ -1,6 +1,7 @@
 # guile-scmutils
 
-This is a mirror of v1.0 of Daniel Gildea's
+This is a mirror of v1.0 of
+[Daniel Gildea's](http://www.cs.rochester.edu/~gildea/)
 [port](http://www.cs.rochester.edu/~gildea/guile-scmutils/) of the
 [scmutils](http://www-swiss.ai.mit.edu/~gjs/6946/linux-install.htm)
 package for symbolic mathematics from

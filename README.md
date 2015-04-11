@@ -119,3 +119,8 @@ guile> (pp (expression ((Gamma q) 't)))
 
 guile> (pp (expression (((Lagrange-equations (L-free-particle 'm)) test-path) 't)))
 <strong>(down 0 0 0)</strong>
+</pre>
+
+## Copying
+
+This software is licensed under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. For details see the files `LICENSE` and `COPYING` included with the source distribution.

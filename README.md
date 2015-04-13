@@ -1,43 +1,42 @@
 # guile-scmutils
 
-This is a mirror of v1.0 of
-[Daniel Gildea's](http://www.cs.rochester.edu/~gildea/)
-[port](http://www.cs.rochester.edu/~gildea/guile-scmutils/) of the
-[scmutils](http://www-swiss.ai.mit.edu/~gjs/6946/linux-install.htm)
-package for symbolic mathematics from
-[mit scheme](http://www.gnu.org/software/mit-scheme/) to
-[guile](http://www.gnu.org/software/guile/guile.html), in an effort to
-make scmutils and the examples from the
-[Structure and Interpretation of Classical Mechanics](http://mitpress.mit.edu/SICM/)
-available on a wider variety of architectures/operating systems.
+**This repository is intended for my own personal use and learning about the `scmutils` system, and the software in it may or may not work at any given time. If you need `scmutils` for a class or for your own interest, do not use this! Instead, please use [Daniel Gildea's version of `scmutils` for Guile](http://www.cs.rochester.edu/~gildea/guile-scmutils/), or better still [the original version for MIT Scheme](http://www-swiss.ai.mit.edu/~gjs/6946/linux-install.htm) if you have the wherewithal to install it.**
 
-After loading the package, call `(set-current-module generic-environment)`
-to use the generic operators for +, \*, etc that can take
-functions, vectors, etc as operands.  If you do not want to replace the
-standard scheme operators, so you can call generic operators with g:+, g:\*, etc.
+This is a port of the [`scmutils`](http://www-swiss.ai.mit.edu/~gjs/6946/linux-install.htm) package for symbolic mathematics from [MIT Scheme](http://www.gnu.org/software/mit-scheme/) to [Guile](http://www.gnu.org/software/guile/guile.html), based on version 1.0 of the [port](http://www.cs.rochester.edu/~gildea/guile-scmutils/) by [Daniel Gildea](http://www.cs.rochester.edu/~gildea/).
 
-Also included is an emacs mode which displays 
-tex-formatted output from an scmutils session inline in your
-emacs buffer (based on `imaxima.el` for maxima).
+`scmutils` is required to run the examples from the book [Structure and Interpretation of Classical Mechanics](http://mitpress.mit.edu/SICM/).
 
 ## Requirements
 
 Requires guile 2.0 or higher.
 
-Plotting is implemented through calls to [gnuplot](http://www.gnuplot.info), which must
-be installed separately.  
+Plotting is implemented through calls to [gnuplot](http://www.gnuplot.info), which must be installed separately.
+
+## Usage
+
+To use the package, it must be on guile's load path. One simple way to do this is to run
+```Scheme
+(add-to-load-path "/path/to/guile-scmutils")
+```
+After this has been done, the `scmutils` module can be loaded by running
+```Scheme
+(use-modules (scmutils))
+```
 
 ## Functionality not available in the port
 
-Scheme extension to allow applying vectors/structures as procedures.
+Guile does not have the MIT Scheme extension to allow applying vectors/structures as procedures.
+
 For example rather than
-<pre>1 ]=> (pe ((up (literal-function 'x) (literal-function 'y)) 't))
+```Scheme
+scheme@(guile-user)> (pe ((up (literal-function 'x) (literal-function 'y)) 't))
 (up (x t) (y t))
-</pre>
+```
 you must use
-<pre>guile> (pe ((lambda (t) (up ((literal-function 'x) t) ((literal-function 'y) t))) 't))
+```Scheme
+scheme@(guile-user)> (pe ((lambda (t) (up ((literal-function 'x) t) ((literal-function 'y) t))) 't))
 (up (x t) (y t))
-</pre>
+```
 See below for an example with mechanics state functions.
 
 ## Example session

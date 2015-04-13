@@ -1,6 +1,6 @@
 # guile-scmutils
 
-**This repository is intended for my own personal use and learning about the `scmutils` system, and the software in it may or may not work at any given time. If you need `scmutils` for a class or for your own interest, do not use this! Instead, please use [Daniel Gildea's version of `scmutils` for Guile](http://www.cs.rochester.edu/~gildea/guile-scmutils/), or better still [the original version for MIT Scheme](http://www-swiss.ai.mit.edu/~gjs/6946/linux-install.htm) if you have the wherewithal to install it.**
+**This repository is intended for my own personal use and learning about the `scmutils` system, and the software in it may or may not work at any given time. If you need `scmutils` for a class or for your own interest, do not use this! Instead, please use [Daniel Gildea's version of `scmutils` for Guile](http://www.cs.rochester.edu/~gildea/guile-scmutils/), or alternatively [the original version for MIT Scheme](http://www-swiss.ai.mit.edu/~gjs/6946/linux-install.htm) if you have the wherewithal to install it.**
 
 This is a port of the [`scmutils`](http://www-swiss.ai.mit.edu/~gjs/6946/linux-install.htm) package for symbolic mathematics from [MIT Scheme](http://www.gnu.org/software/mit-scheme/) to [Guile](http://www.gnu.org/software/guile/guile.html), based on version 1.0 of the [port](http://www.cs.rochester.edu/~gildea/guile-scmutils/) by [Daniel Gildea](http://www.cs.rochester.edu/~gildea/).
 

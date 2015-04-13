@@ -22,7 +22,8 @@ emacs buffer (based on `imaxima.el` for maxima).
 
 ## Requirements
 
-Requires guile 2.0 or higher.  
+Requires guile 2.0 or higher.
+
 Plotting is implemented through calls to [gnuplot](http://www.gnuplot.info), which must
 be installed separately.  
 

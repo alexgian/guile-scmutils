@@ -22,6 +22,10 @@ After this has been done, the `scmutils` module can be loaded by running
 ```Scheme
 (use-modules (scmutils))
 ```
+You also almost certainly want to enable Guile's curried definitions:
+```Scheme
+(use-modules (ice-9 curried-definitions))
+```
 
 ## Functionality not available in the port
 
@@ -41,26 +45,21 @@ See below for an example with mechanics state functions.
 
 ## Example session
 
-<pre>
-% guile
-guile> (load "load.scm")
-guile> (set-current-module generic-environment)
-guile> (define D derivative)
-guile> (define f (literal-function 'f))
-guile> (define f^2 (expt f 2))
-guile> (pe ((D f^2) 't))
-<strong>(* ((derivative f) t) 2 (f t))</strong>
-
-guile> (pe ((D sin) 's))
-<strong>(cos s)</strong>
-
-guile> (pe ((partial-derivative (lambda (x y) (* x y)) 0) 's 't ))
-<strong>t</strong>
-
-guile> (pe ((partial-derivative (lambda (x y) (* x y)) 1) 's 't ))
-<strong>s</strong>
-
-guile> (pp (expression
+```Scheme
+scheme@(guile-user)> (add-to-load-path "/path/to/guile-scmutils")
+scheme@(guile-user)> (use-modules (scmutils))
+scheme@(guile-user)> (use-modules (ice-9 curried-definitions))
+scheme@(guile-user)> (define f (literal-function 'f))
+scheme@(guile-user)> (define f^2 (expt f 2))
+scheme@(guile-user)> (pe ((D f^2) 't))
+(* 2 (f t) ((D f) t))
+scheme@(guile-user)> (pe ((D sin) 's))
+(cos s)
+scheme@(guile-user)> (pe ((partial-derivative (lambda (x y) (* x y)) 0) 's 't ))
+t
+scheme@(guile-user)> (pe ((partial-derivative (lambda (x y) (* x y)) 1) 's 't ))
+s
+scheme@(guile-user)> (pp (expression
   (let ((k (literal-number 'k)) (m (literal-number 'm)))
     ((D
       (lambda (v)
@@ -76,50 +75,43 @@ guile> (pp (expression
             (literal-number 'y))
         (down (literal-number 'px)
               (literal-number 'py)))))))
-<strong>(down (cos t)
-      (down (* 0.5 k (+ x x)) (* 0.5 k (+ y y)))
+(down (cos t)
+      (down (* 1/2 k (+ x x)) (* 1/2 k (+ y y)))
       (up (* (+ px px) (/ 1 (* 2 m)))
-          (* (+ py py) (/ 1 (* 2 m)))))</strong>
-
-; can't apply vector as function.
-; must define q as a lambda expr instead of as a vector of literal functions.
-guile> (define q (lambda (t) (up ((literal-function 'x) t)  
-			  ((literal-function 'y) t)  
-			  ((literal-function 'z) t))))
-
-guile> (define ((L-free-particle mass) local)
+          (* (+ py py) (/ 1 (* 2 m)))))
+scheme@(guile-user)> ; Can't apply vector as function.
+scheme@(guile-user)> ; Must define q as a lambda expr instead of as a vector of literal functions.
+scheme@(guile-user)> (define q (lambda (t) (up ((literal-function 'x) t)
+              ((literal-function 'y) t)
+              ((literal-function 'z) t))))
+scheme@(guile-user)> (define ((L-free-particle mass) local)
   (let ((v (ref local 2)))
     (* 1/2 mass (square v))))
-
-guile> (define ((Gamma q) t)
+scheme@(guile-user)> (define ((Gamma q) t)
   (up t
       (q t)
       ((D q) t)))
-
-guile> (define* ((Lagrange-equations Lagrangian #:optional dissipation-function) q)
+scheme@(guile-user)> (define* ((Lagrange-equations Lagrangian #:optional dissipation-function) q)
   (let ((state-path (Gamma q)))
     (if (default-object? dissipation-function)
-	(- (D (compose ((partial 2) Lagrangian) state-path))
-	   (compose ((partial 1) Lagrangian) state-path))
-	(- (D (compose ((partial 2) Lagrangian) state-path))
-	   (compose ((partial 1) Lagrangian) state-path)
-	   (- (compose ((partial 2) dissipation-function) state-path))))))
-
-guile> (define (test-path t)
+    (- (D (compose ((partial 2) Lagrangian) state-path))
+       (compose ((partial 1) Lagrangian) state-path))
+    (- (D (compose ((partial 2) Lagrangian) state-path))
+       (compose ((partial 1) Lagrangian) state-path)
+       (- (compose ((partial 2) dissipation-function) state-path))))))
+scheme@(guile-user)> (define (test-path t)
   (up (+ (* 'a t) 'a0)
       (+ (* 'b t) 'b0)
       (+ (* 'c t) 'c0)))
-
-guile> (pp (expression ((Gamma q) 't)))
-<strong>(up t
+scheme@(guile-user)> (pp (expression ((Gamma q) 't)))
+(up t
     (up (x t) (y t) (z t))
     (up ((derivative x) t)
         ((derivative y) t)
-        ((derivative z) t)))</strong>
-
-guile> (pp (expression (((Lagrange-equations (L-free-particle 'm)) test-path) 't)))
-<strong>(down 0 0 0)</strong>
-</pre>
+        ((derivative z) t)))
+scheme@(guile-user)> (pp (expression (((Lagrange-equations (L-free-particle 'm)) test-path) 't)))
+(down 0 0 0)
+```
 
 ## Copying
 

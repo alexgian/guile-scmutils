@@ -11,17 +11,19 @@ make scmutils and the examples from the
 [Structure and Interpretation of Classical Mechanics](http://mitpress.mit.edu/SICM/)
 available on a wider variety of architectures/operating systems.
 
-After loading the package, call (set-current-module generic-environment)
+After loading the package, call `(set-current-module generic-environment)`
 to use the generic operators for +, \*, etc that can take
 functions, vectors, etc as operands.  If you do not want to replace the
 standard scheme operators, so you can call generic operators with g:+, g:\*, etc.
 
 Also included is an emacs mode which displays 
 tex-formatted output from an scmutils session inline in your
-emacs buffer (based on <a href="http://members3.jcom.home.ne.jp/imaxima/">imaxima.el</a> for maxima).
+emacs buffer (based on `imaxima.el` for maxima).
 
-Requires: guile 2.0 or higher.  
-Plotting is implemented through calls to <a href="http://www.gnuplot.info">gnuplot</a>, which must
+## Requirements
+
+Requires guile 2.0 or higher.  
+Plotting is implemented through calls to [gnuplot](http://www.gnuplot.info), which must
 be installed separately.  
 
 ## Functionality not available in the port

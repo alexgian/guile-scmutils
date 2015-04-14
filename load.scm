@@ -23,14 +23,95 @@
 ;
 ;|#
 
-;((access with-directory-rewriting-rule
-;	 (->environment '(RUNTIME COMPILER-INFO)))
-; ;; This assumes that this file appears in a subdirectory of the
-; ;; scmutils top-level directory.
-; (let ((pathname (directory-pathname (current-load-pathname))))
-;   (pathname-new-directory pathname
-;			   (except-last-pair (pathname-directory pathname))))
-; "/usr/local/scmutils/"
-; (lambda () (load "load-real")))
+;;;; Scmutils top-level loader
 
-(load "load-real.scm")
+;(ge user-initial-environment)
+
+;(add-subsystem-identification! "\n  ScmUtils" '("Mechanics " " Fall 2006"))
+
+(define scmutils-base-environment
+  (if (defined? 'scmutils-base-environment)
+      (begin
+	(set-current-module scmutils-base-environment)
+	scmutils-base-environment)
+      (current-module)))
+
+;(load "general/comutils.scm"); scmutils-base-environment)
+
+;(start-canonicalizing-symbols!)
+
+;;; LOCAL-ASSIGNMENT should eventually be replaced with
+;;; ENVIRONMENT-DEFINE when that has stabilized.
+
+;(local-assignment scmutils-base-environment
+;		  '*environment*
+;		  'scmutils-base-environment)
+
+;(local-assignment scmutils-base-environment
+(define 
+		  derivative-symbol
+		  (string->symbol "D"))
+
+(define (with-working-directory-pathname path thunk)
+  (let ((old (getcwd)))
+    (chdir path)
+    (let ((result (thunk)))
+      (chdir old)
+      result)))
+
+
+(define (in-scmutils-directory relative-path thunk)
+  (with-working-directory-pathname
+   relative-path
+    thunk))
+
+;(load-option 'hash-table)
+;(load-option 'synchronous-subprocess)
+
+;; This doesn't work because load must also get dll's into the microcode.
+;;(load-option 'swat)
+
+(load "compat.scm")
+
+(load "general/load.scm")
+(load "kernel/load.scm")
+
+;;(environment-define system-global-environment
+;;		    'generic-environment
+;;		    (access generic-environment scmutils-base-environment))
+
+(load "simplify/load.scm" )
+
+;(define symbolic-environment
+;  (access symbolic-environment scmutils-base-environment))
+;(define rule-environment
+;  (access rule-environment scmutils-base-environment))
+
+(define symbolic-operators
+  (hash-fold (lambda (key value prior) (cons key prior)) '() symbolic-operator-table))
+
+(load "display/load.scm" )
+
+;(load "enclose/load.scm" )
+(define (lambda->numerical-procedure lexp)
+  (primitive-eval lexp))
+
+(load "numerics/load.scm")
+
+(load "poly/load.scm" )
+
+
+;(start-preserving-case!)
+
+(load "kernel/litfun.scm" )
+
+(load "units/load.scm" )      
+
+(load "mechanics/load.scm")
+
+(load "calculus/load.scm")
+
+
+
+
+

@@ -18,7 +18,7 @@ To use the package, it must be on guile's load path. One simple way to do this i
 ```Scheme
 (add-to-load-path "/path/to/guile-scmutils")
 ```
-After this has been done, the `scmutils` module can be loaded by running
+You might want to add the line above to your `.guile` file. After this has been done, the `scmutils` module can be loaded by running
 ```Scheme
 (use-modules (scmutils))
 ```

@@ -1,7 +1,7 @@
 (define-module (scmutils))
 
 (eval-when (load compile eval)
-           (load-from-path "load.scm"))
+           (load-from-path "./src/load.scm"))
 
 ;; Add all bindings from generic-environment to the current module
 (module-for-each (lambda (sym var)

@@ -14,7 +14,7 @@ Plotting is implemented through calls to [gnuplot](http://www.gnuplot.info), whi
 
 ## Usage
 
-To use the package, it must be on guile's load path. One simple way to do this is to run
+To use the package, you need to clone this repository and place it on guile's load path. One simple way to do the latter is to run
 ```Scheme
 (add-to-load-path "/path/to/guile-scmutils")
 ```
@@ -26,6 +26,8 @@ You also almost certainly want to enable Guile's curried definitions:
 ```Scheme
 (use-modules (ice-9 curried-definitions))
 ```
+
+The first time you load the `scmutils` module, you might see a series of compilation messages.
 
 ## Functionality not available in the port
 

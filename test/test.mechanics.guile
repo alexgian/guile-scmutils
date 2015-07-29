@@ -1,6 +1,7 @@
-#!/usr/bin/guile \
--l ../load.scm -s 
+#!/usr/bin/guile
 !#
+(add-to-load-path "../")
+(use-modules (scmutils) (ice-9 curried-definitions))
 
 ; replace + * etc with generic operators
 (eval-when (load compile eval)
@@ -22,4 +23,3 @@
 (pp (q 0.5))
 
 (pp (q .75))
-

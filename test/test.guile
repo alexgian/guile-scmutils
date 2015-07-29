@@ -1,12 +1,7 @@
-#!/usr/bin/guile \
--l ../load.scm -s 
+#!/usr/bin/guile
 !#
-
-; replace + * etc with generic operators
-(eval-when (load compile eval)
-	   (set-current-module generic-environment))
-
-(define D derivative)
+(add-to-load-path "../")
+(use-modules (scmutils) (ice-9 curried-definitions))
 
 (define f (literal-function 'f))
 (define f^2 (expt f 2))	

@@ -1,9 +1,7 @@
-#!/usr/bin/guile \
--l ../load.scm -s 
+#!/usr/bin/guile
 !#
-
-(eval-when (load compile eval)
-	   (set-current-module generic-environment))
+(add-to-load-path "../")
+(use-modules (scmutils) (ice-9 curried-definitions))
 
 (define (((pendulum-solution-series alpha beta) state) time)
   (let ((E ((Hpendulum alpha beta) state)))

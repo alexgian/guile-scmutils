@@ -1,10 +1,7 @@
-#!/usr/bin/guile \
--l ../load.scm -s 
+#!/usr/bin/guile
 !#
-
-; replace + * etc with generic operators
-(eval-when (load compile eval)
-	   (set-current-module generic-environment))
+(add-to-load-path "../")
+(use-modules (scmutils) (ice-9 curried-definitions))
 
 (define win2 (frame 0. pi/2 0. 1.2))
 

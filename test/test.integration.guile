@@ -1,6 +1,7 @@
-#!/usr/bin/guile \
--l ../load.scm -s 
+#!/usr/bin/guile
 !#
+(add-to-load-path "../")
+(use-modules (scmutils) (ice-9 curried-definitions))
 
 (pe (definite-integral cos 0 30))
 (pe (definite-integral sin 0 (* 2 pi)))

@@ -1219,23 +1219,6 @@
 		processed-terms
 		)))))))
 
-(set! internal-show-expression
-  (lambda (exp)
-    (set! last-tex-string-generated (expression->tex-string exp))
-    (cpp exp)
-    (let ()
-      (if (and (getenv "DISPLAY")
-	       enable-tex-display)
-	  (begin (display-in-screen-window last-tex-string-generated)
-		 (newline)
-		 (newline)
-		 ;;  (display tex-string)
-		 ;;  (newline)
-		 ;;  (newline)
-		 )
-	  (2d-show-expression exp)))))
-
-
 (set! 2d-show-expression
       (lambda (exp)
 	(2d-display-box
@@ -1263,12 +1246,6 @@
 			      (line-elements (car (box-lines one-line-box))))))))
 	  (string-append tex-string))))
 
-;; control characters signal to imaxima.el that this is a formula
-(define emacs-show-expression
-      (lambda (exp)
-	(write-line  (string-append ""
-				    (expression->tex exp)
-				    ""))))
 
 ;#|
 ;;;; Beal's folly.
@@ -1311,3 +1288,73 @@
 ;
 ;
 ;|#
+
+(define (show-expression--window exp)
+  (set! last-tex-string-generated (expression->tex-string exp))
+  (cpp exp)
+  (let ()
+    (if (and (getenv "DISPLAY")
+             enable-tex-display)
+        (begin (display-in-screen-window last-tex-string-generated)
+               (newline)
+               (newline))
+        (2d-show-expression exp))))
+
+(define tex-string->dvi
+  (let ((count 0))
+    (lambda (tex-string)
+      (let* ((dirname (passwd:dir (getpwuid (geteuid))))
+             (file-name (string-append dirname
+                                       "/temp-display"
+                                       (number->string count)))
+             (complete-tex-input (string-append
+                                  "\\voffset=-6pc "
+                                  "\\hsize=48pc " " \\hoffset=-6pc  "
+                                  boxit-string "\n"
+                                  tex-string
+                                  "\\vfil\\bye")))
+        (with-output-to-file (string-append file-name ".tex")
+          (lambda () (display complete-tex-input)))
+        (system
+         (string-append "cd " dirname ";"
+                        " tex " file-name
+                        " > /dev/null 2>&1 "))
+        (set! count (+ count 1))
+        file-name))))
+
+(define (view-dvi file-name)
+  (system
+   (string-append "xdvi " file-name ".dvi "
+                  "-s 4 "
+                  "-yoffset 3.5 "
+                  "-geometry 900x400+1+1"
+                  " > /dev/null 2>&1; ")))
+
+(define (dvi->png file-name)
+  (system
+   (string-append "dvipng " file-name ".dvi"
+                  " -o " file-name ".png"
+                  " > /dev/null 2>&1; "))
+  file-name)
+
+(define (remove-files file-name)
+  ;; This feels very dangerous! There is probably a safer way
+  (system
+   (string-append "/bin/rm " file-name ".*")))
+
+(define (show-expression--geiser exp)
+  (let* ((file-name (dvi->png
+                     (tex-string->dvi
+                      (expression->tex-string exp))))
+         (ret (display (format #f "#<Image: ~a.png>\n" file-name))))
+    (remove-files file-name)
+    ;; Hack to suppress printing of return value -- is there a better way?
+    ret))
+
+(set! internal-show-expression show-expression--geiser)
+
+(define (toggle-show-expression-mode)
+  (let ((geiserp #t))
+    (if geiserp (set! internal-show-expression show-expression--window)
+        (set! internal-show-expression show-expression--geiser))
+    (set! geiserp (not geiserp))))

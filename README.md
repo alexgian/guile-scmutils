@@ -29,11 +29,19 @@ You also almost certainly want to enable Guile's curried definitions:
 
 The first time you load the `scmutils` module, you might see a series of compilation messages.
 
+## Using `scmutils` with Geiser
+
+TODO
+
+## Known issues
+
+In an attempt to prevent namespace pollution, I have specified the functions to be exported in `scmutils.scm`. This list of exports is, however, incomplete. If a function should be available (e.g. if it is used in *Structure and Interpretation of Classical Mechanics*) but is not, please file an issue.
+
 ## Functionality not available in the port
 
-Guile does not have the MIT Scheme extension to allow applying vectors/structures as procedures.
+Some functionality from the MIT Scheme version of `scmutils` will not be available in this port for the foreseeable future.
 
-For example rather than
+Guile does not have the MIT Scheme extension to allow applying vectors/structures as procedures. For example, rather than
 ```Scheme
 scheme@(guile-user)> (pe ((up (literal-function 'x) (literal-function 'y)) 't))
 (up (x t) (y t))

@@ -468,6 +468,7 @@
 ;; Export other scmutils bindings
 (export :pi
         :pi/2
+        2d-show-expression
         definite-integral
         frame
         literal-function

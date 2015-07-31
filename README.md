@@ -14,7 +14,7 @@ Plotting is implemented through calls to [gnuplot](http://www.gnuplot.info), whi
 
 ## Usage
 
-To use the package, you need to clone this repository and place it on guile's load path. One simple way to do the latter is to run
+To use the package, you need to clone this repository and place it on Guile's load path. One simple way to do the latter is to run
 ```Scheme
 (add-to-load-path "/path/to/guile-scmutils")
 ```

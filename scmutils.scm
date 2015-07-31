@@ -479,4 +479,5 @@
         )
 
 ;; Export additional/utility bindings
-(export toggle-show-expression-mode)
+(export toggle-show-expression-mode
+        toggle-tex-display)

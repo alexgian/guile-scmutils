@@ -86,16 +86,12 @@
 ;|#
 
 ;(declare (usual-integrations))
-
 ;;; exported functions
-(define internal-show-expression #f)
 (define 2d-show-expression #f)
 (define expression->tex-string #f)
 (define display-tex-string #f)
 
 (define last-tex-string-generated #f)
-
-(define enable-tex-display #t)
 
 ;;; A utility procedure:
 
@@ -1151,19 +1147,7 @@
                   (lambda ()
                     (for-each display
                               (line-elements (car (box-lines one-line-box))))))))
-          (string-append "\\boxit{ " "$$" tex-string "$$" "}"))))
-
-;; same as expression->tex-string but no \boxit
-(define expression->tex
-      (lambda (exp)
-        (let* ((one-line-box (unparse exp tex:symbol-substs tex:unparse-table))
-               (tex-string
-                (with-output-to-string
-                  (lambda ()
-                    (for-each display
-                              (line-elements (car (box-lines one-line-box))))))))
-          (string-append tex-string))))
-
+          (string-append "$$" tex-string "$$"))))
 
 ;#|
 ;;;; Beal's folly.
@@ -1183,136 +1167,80 @@
 ;;;(define left-down-delimiter "\\left \\lfloor \\matrix{ ")
 ;;;(define right-down-delimiter "} \\right \\rfloor")
 
-
 (define left-up-delimiter "\\left( \\matrix{ ")
 (define right-up-delimiter "} \\right)")
 (define left-down-delimiter "\\left[ \\matrix{ ")
 (define right-down-delimiter "} \\right]")
 
 
-;#|
-;
-;(define test
-;  '(/
-;    (+ alpha (/ ((derivative f) b) (+ alpha beta)))
-;    (+ (/ (+ x y) 2) (expt (/ (+ a c (/ 2 x)) (* d e)) (+ f (/ g h))))))
-;
-;
-;
-;|#
-
 ;; Display functions available to users (and some of their
-;; prerequisites) are defined below
+;; prerequisites) are defined below.
 
-(define boxit-string
-  "\\def\\boxit#1{\\vbox{\\hrule\\hbox{\\vrule\\kern5pt
-     \\vbox{\\kern5pt#1\\kern5pt}\\kern3pt\\vrule}\\hrule}}\n")
+;; The handling of temporary files here is not secure, so this code
+;; shouldn't be exposed to a network.
 
-(define display-in-screen-window
-  (let ((count 0))
-    (lambda (tex-string)
-      (let* ((dirname (passwd:dir (getpwuid (geteuid))))
-             (file-name (string-append dirname
-                                       "/temp-display"
-                                       (number->string count)))
-             (complete-tex-input (string-append
-                                  "\\voffset=-6pc "
-                                  "\\hsize=48pc " " \\hoffset=-6pc  "
-                                  boxit-string "\n"
-                                  tex-string
-                                  "\\vfil\\bye")))
-        (with-output-to-file
-            (string-append file-name ".tex")
-          (lambda () (display complete-tex-input)))
-        (system
-         (string-append "cd " dirname ";"
-                        " tex " file-name
-                        " > /dev/null 2>&1 "))
-        (system
-         (string-append "xdvi " file-name ".dvi "
-                        "-s 4 "
-                        "-yoffset 3.5 "
-                        "-geometry 900x400+1+1"
-                        " > /dev/null 2>&1; "
-                        "/bin/rm " file-name ".*"
-                        ))
-        (set! count (+ count 1))
-        ))))
+(define (complete-latex-input tex-string)
+  (string-append
+   "\\documentclass{standalone}"
+   "\\usepackage{amsmath}"
+   "\\begin{document}"
+   "\\Large"
+   "\\boxed{" tex-string "}"
+   "\\end{document}"))
+
+(define (tex-string->png tex-string)
+  (let ((fn (tmpnam))
+        (fn-png (tmpnam)))
+    (with-output-to-file fn
+      (lambda () (display (complete-latex-input tex-string))))
+    (system
+     (string-append "cd " (dirname fn) ";"
+                    " latex " (basename fn)
+                    " > /dev/null 2>&1"))
+    (system
+     (string-append "dvipng " fn ".dvi"
+                    " -o " fn-png
+                    " > /dev/null 2>&1"))
+    (delete-file fn)
+    (delete-file (string-append fn ".dvi"))
+    (delete-file (string-append fn ".log"))
+    fn-png))
+
+(define (view-png file-name)
+  (system
+   (string-append "xdg-open " file-name " > /dev/null 2>&1")))
+
+(define (display-in-screen-window tex-string)
+  (let ((file-name (tex-string->png tex-string)))
+    (view-png file-name)))
 
 (set! display-tex-string display-in-screen-window)
 
-(define (cpp x)
-  (pp x
-      (current-output-port)
-      true)) ;; as code
+(define enable-tex-display #t)
 
-(define (show-expression--window exp)
+(define (toggle-tex-display)
+  (set! enable-tex-display (not enable-tex-display)))
+
+(define (show-expression--default exp)
   (set! last-tex-string-generated (expression->tex-string exp))
-  (cpp exp)
-  (let ()
-    (if (and (getenv "DISPLAY")
-             enable-tex-display)
-        (begin (display-in-screen-window last-tex-string-generated)
-               (newline)
-               (newline))
-        (2d-show-expression exp))))
-
-(define tex-string->dvi
-  (let ((count 0))
-    (lambda (tex-string)
-      (let* ((dirname (passwd:dir (getpwuid (geteuid))))
-             (file-name (string-append dirname
-                                       "/temp-display"
-                                       (number->string count)))
-             (complete-tex-input (string-append
-                                  "\\voffset=-6pc "
-                                  "\\hsize=48pc " " \\hoffset=-6pc  "
-                                  boxit-string "\n"
-                                  tex-string
-                                  "\\vfil\\bye")))
-        (with-output-to-file (string-append file-name ".tex")
-          (lambda () (display complete-tex-input)))
-        (system
-         (string-append "cd " dirname ";"
-                        " tex " file-name
-                        " > /dev/null 2>&1 "))
-        (set! count (+ count 1))
-        file-name))))
-
-(define (view-dvi file-name)
-  (system
-   (string-append "xdvi " file-name ".dvi "
-                  "-s 4 "
-                  "-yoffset 3.5 "
-                  "-geometry 900x400+1+1"
-                  " > /dev/null 2>&1; ")))
-
-(define (dvi->png file-name)
-  (system
-   (string-append "dvipng " file-name ".dvi"
-                  " -o " file-name ".png"
-                  " > /dev/null 2>&1; "))
-  file-name)
-
-(define (remove-files file-name)
-  ;; This feels very dangerous! There is probably a safer way
-  (system
-   (string-append "/bin/rm " file-name ".*")))
+  (if (and (getenv "DISPLAY") enable-tex-display)
+      (display-in-screen-window last-tex-string-generated)
+      (2d-show-expression exp)))
 
 (define (show-expression--geiser exp)
-  (let* ((file-name (dvi->png
-                     (tex-string->dvi
-                      (expression->tex-string exp))))
-         (ret (display (format #f "#<Image: ~a.png>\n" file-name))))
-    ;; (remove-files file-name)
-    ;; Hack to suppress printing of return value -- is there a better way?
-    ret))
+  (let ((file-name (tex-string->png (expression->tex-string exp))))
+    (display (format #f "#<Image: ~a>\n" file-name))))
 
-(set! internal-show-expression show-expression--geiser)
+(define internal-show-expression show-expression--geiser)
 
 (define toggle-show-expression-mode
   (let ((geiserp #t))
     (lambda ()
-      (if geiserp (set! internal-show-expression show-expression--window)
-          (set! internal-show-expression show-expression--geiser))
+      (if geiserp
+          (begin
+            (set! internal-show-expression show-expression--default)
+            (display "`show-expression` mode: default\n"))
+          (begin
+            (set! internal-show-expression show-expression--geiser)
+            (display "`show-expression` mode: Geiser\n")))
       (set! geiserp (not geiserp)))))

@@ -4,7 +4,7 @@
 
 This is a port of the [`scmutils`](http://www-swiss.ai.mit.edu/~gjs/6946/linux-install.htm) package for symbolic mathematics from [MIT Scheme](http://www.gnu.org/software/mit-scheme/) to [Guile](http://www.gnu.org/software/guile/guile.html), based on version 1.0 of the [port](http://www.cs.rochester.edu/~gildea/guile-scmutils/) by [Daniel Gildea](http://www.cs.rochester.edu/~gildea/).
 
-`scmutils` is required to run the examples from the book [Structure and Interpretation of Classical Mechanics](http://mitpress.mit.edu/SICM/).
+`scmutils` is required to run the examples from the books [Structure and Interpretation of Classical Mechanics](http://mitpress.mit.edu/SICM/) and [Functional Differential Geometry](https://mitpress.mit.edu/books/functional-differential-geometry).
 
 ## Requirements
 

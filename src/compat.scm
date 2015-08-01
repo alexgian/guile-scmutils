@@ -288,5 +288,8 @@
 
 (define (for-all? p l) (every l p))
 
+(define (except-last-pair lst)
+  (list-head lst (- (length lst) 1)))
+
 ;;;;; make-initialized-list uses a lot of stack space
 (debug-set! stack 0)

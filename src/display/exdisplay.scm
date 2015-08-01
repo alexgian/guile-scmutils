@@ -1162,13 +1162,8 @@
 ;         (string-append "\\boxit{ " "$" tex-string "$" "}"))))
 ;|#
 
-;;;(define left-up-delimiter "\\left \\lceil \\matrix{ ")
-;;;(define right-up-delimiter "} \\right \\rceil")
-;;;(define left-down-delimiter "\\left \\lfloor \\matrix{ ")
-;;;(define right-down-delimiter "} \\right \\rfloor")
-
 (define left-up-delimiter "\\left( \\begin{matrix} ")
-(define right-up-delimiter "\\end{matrix}} \\right)")
+(define right-up-delimiter "\\end{matrix} \\right)")
 (define left-down-delimiter "\\left[ \\begin{matrix} ")
 (define right-down-delimiter "\\end{matrix} \\right]")
 

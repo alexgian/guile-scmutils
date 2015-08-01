@@ -123,6 +123,10 @@ scheme@(guile-user)> (pp (expression (((Lagrange-equations (L-free-particle 'm))
 (down 0 0 0)
 ```
 
+## Additional documentation
+
+The original MIT Scheme `scmutils` manuals are available in the directory [manual](manual).
+
 ## Copying
 
 This software is licensed under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version. For details see the file `LICENSE` included with the source distribution.

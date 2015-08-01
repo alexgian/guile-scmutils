@@ -8,9 +8,9 @@ This is a port of the [`scmutils`](http://www-swiss.ai.mit.edu/~gjs/6946/linux-i
 
 ## Requirements
 
-Requires guile 2.0 or higher.
-
-Plotting is implemented through calls to [gnuplot](http://www.gnuplot.info), which must be installed separately.
+- Requires Guile 2.0 (or greater).
+- Plotting is implemented through calls to [gnuplot](http://www.gnuplot.info), which must be installed separately.
+- Graphical equation rendering requires the presence of a reasonably complete TeX distribution, such as [TeX Live](https://www.tug.org/texlive/).
 
 ## Usage
 
@@ -29,7 +29,7 @@ You also almost certainly want to enable Guile's curried definitions:
 
 The first time you load the `scmutils` module, you might see a series of compilation messages.
 
-## Using `scmutils` with Geiser
+## Using scmutils with Geiser
 
 TODO
 

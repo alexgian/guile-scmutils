@@ -742,9 +742,9 @@
          (separated-columns
           (glue-horiz (interpolate " \\cr \\cr " separated-rows))))
     (glue-horiz
-     (list "\\left[ \\matrix{ "
+     (list "\\left[ \\begin{matrix} "
            separated-columns
-           "} \\right]"))))
+           "\\end{matrix} \\right]"))))
 
 (define (tex:unparse-up uptable matrix-list)
   (let* ((displaystyle-rows
@@ -1167,10 +1167,10 @@
 ;;;(define left-down-delimiter "\\left \\lfloor \\matrix{ ")
 ;;;(define right-down-delimiter "} \\right \\rfloor")
 
-(define left-up-delimiter "\\left( \\matrix{ ")
-(define right-up-delimiter "} \\right)")
-(define left-down-delimiter "\\left[ \\matrix{ ")
-(define right-down-delimiter "} \\right]")
+(define left-up-delimiter "\\left( \\begin{matrix} ")
+(define right-up-delimiter "\\end{matrix}} \\right)")
+(define left-down-delimiter "\\left[ \\begin{matrix} ")
+(define right-down-delimiter "\\end{matrix} \\right]")
 
 
 ;; Display functions available to users (and some of their
@@ -1203,6 +1203,7 @@
                     " > /dev/null 2>&1"))
     (delete-file fn)
     (delete-file (string-append fn ".dvi"))
+    (delete-file (string-append fn ".aux"))
     (delete-file (string-append fn ".log"))
     fn-png))
 

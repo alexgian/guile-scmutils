@@ -470,12 +470,14 @@
         :pi/2
         2d-show-expression
         definite-integral
+        down
         frame
         literal-function
         multidimensional-minimize
         plot-function
         print-expression pe
         show-expression se
+        up
         )
 
 ;; Export additional/utility bindings

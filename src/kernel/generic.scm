@@ -186,7 +186,8 @@
 	(else (generic:expt x y))))
 
 
-(define g:gcd (make-generic-operator 2 'gcd))
+;; (define g:gcd (make-generic-operator 2 'gcd))
+(define g:gcd:bin (make-generic-operator 2 'gcd))
 
 (define g:dot-product (make-generic-operator 2 'dot-product))
 

@@ -1,10 +1,8 @@
-#!/usr/bin/guile
-!#
 (add-to-load-path "../")
 (use-modules (scmutils) (ice-9 curried-definitions))
 
 (define f (literal-function 'f))
-(define f^2 (expt f 2))	
+(define f^2 (expt f 2))
 (pe ((D f^2) 't))
 
 (pe ((D sin) 's))
@@ -32,9 +30,9 @@
 
 ; can't apply vector as function.
 ; must define q as a lambda expr instead of as a vector of literal functions.
-(define q (lambda (t) (up ((literal-function 'x) t)  
-			  ((literal-function 'y) t)  
-			  ((literal-function 'z) t))))
+(define q (lambda (t) (up ((literal-function 'x) t)
+                          ((literal-function 'y) t)
+                          ((literal-function 'z) t))))
 
 (define ((L-free-particle mass) local)
   (let ((v (ref local 2)))

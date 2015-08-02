@@ -471,11 +471,15 @@
         2d-show-expression
         definite-integral
         down
+        expression
         frame
         literal-function
+        literal-number
         multidimensional-minimize
         plot-function
+        pp
         print-expression pe
+        s:ref
         show-expression se
         up
         )

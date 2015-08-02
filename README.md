@@ -125,7 +125,7 @@ scheme@(guile-user)> (pp (expression (((Lagrange-equations (L-free-particle 'm))
 
 ## Additional documentation
 
-The original MIT Scheme `scmutils` manuals are available in the directory [manual](manual).
+The original MIT Scheme `scmutils` manual is available in the directory [manual](manual).
 
 ## Copying
 
